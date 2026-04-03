@@ -142,12 +142,12 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="" class="menu-link">
+                  <a href="{% url 'admin-admin-list-page' %}" class="menu-link">
                     <div class="text-truncate" data-i18n="Admins">Admins</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="" class="menu-link">
+                  <a href="{% url 'admin-user-list-page' %}" class="menu-link">
                     <div class="text-truncate" data-i18n="users">Users</div>
                   </a>
                 </li>
@@ -276,7 +276,7 @@
                       <div class="dropdown-divider my-1"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="javascript:void(0);">
+                      <a class="dropdown-item" href="{% url 'admin-logout-page' %}">
                         <i class="icon-base bx bx-power-off icon-md me-3"></i><span>Log Out</span>
                       </a>
                     </li>

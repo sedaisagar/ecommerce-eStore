@@ -1,7 +1,9 @@
 from django.views import generic
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+
+from admin_panel.permissions import AdminLoginRequiredMixin
 
 class AdminLoginView(generic.TemplateView):
     template_name = "admin-panel/auth-login-basic.html"
@@ -15,7 +17,6 @@ class AdminLoginView(generic.TemplateView):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -25,7 +26,16 @@ class AdminLoginView(generic.TemplateView):
             context["error"] = "Invalid credentials."
             return self.render_to_response(context)
 
-class AdminHomeView(generic.TemplateView):
+class AdminLogoutView(generic.TemplateView):
+    template_name = "admin-panel/auth-logout-basic.html"
+
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("admin-login-page")
+
+
+class AdminHomeView(AdminLoginRequiredMixin, generic.TemplateView):
     template_name = "admin-panel/index.html"
+
 
 

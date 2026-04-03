@@ -1,0 +1,90 @@
+{% extends 'admin-panel/base.html' %}
+
+{% block content %}
+
+{% comment %}
+    {% load crispy_forms_tags %}
+{% endcomment %}
+
+{% load custom_filters %}
+
+<div>
+    <div class="card py-5">
+        <div class="d-flex justify-content-between align-items-center px-3">
+            <h5>{{title}}</h5>
+            {% if 'create' in actions %}
+            <a class="btn btn-primary" href="create/">Create</a>
+            {% endif %}
+        </div>
+        <div class="table-responsive text-nowrap mb-5">
+            <table class="table table-striped mb-5">
+                <thead>
+                    <tr>
+                        {% for i in fields %}
+                        <th>{{i|upper}}</th>
+                        {% endfor %}
+                        {% if 'edit' in actions or 'delete' in actions %} 
+                        <th>Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0 mb-5">
+                    {% for j in object_list %}
+                    <tr>
+                        {% for i in fields %}
+                        <td>{{j|get_attr:i}}</td>
+                        {% endfor %}
+                        {% if 'edit' in actions or 'delete' in actions %} 
+                        <td>
+                            <div class="d-flex justify-content-between align-items-center px-3 w-50">
+                                {% if 'edit' in actions %}
+                                <a href="update/{{j.pk}}"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                {% endif %}
+                                {% if 'delete' in actions %}
+                                <a href="delete/{{j.pk}}"><i class="bx bx-trash me-1"></i>Delete</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% empty %}
+                    <tr> 
+                        <td colspan="3">No data to display!</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% if object_list %}
+                    <tr>
+                        <td colspan="10">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item"><a class="page-link" {% if page_obj.has_previous %}
+                                            href="?page={{page_obj.previous_page_number}}" {% endif %}>Previous</a>
+                                    </li>
+
+                                    {% for i in page_obj.paginator.page_range %}
+                                    <li class="page-item {% if page_obj.number == i %} active {% endif %}"><a
+                                            class="page-link" {% if page_obj.number == i %} {% else %} href="?page={{i}}"
+                                            {% endif %}>
+                                            {{i}}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+
+                                    <li class="page-item"><a class="page-link" {% if page_obj.has_next %}
+                                            href="?page={{page_obj.next_page_number}}" {% endif %}>Next</a></li>
+                                </ul>
+                            </nav>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</div>
+
+{% endblock %}
