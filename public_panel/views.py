@@ -3,9 +3,10 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 
+from public_panel.permissions import UserLoginCheckRequiredMixin, UserLoginRequiredMixin
 from users.models import User
 
-class LoginPageView(generic.TemplateView):
+class LoginPageView(UserLoginCheckRequiredMixin, generic.TemplateView):
     template_name = "public-panel/login.html"
     
     def post(self, request, *args, **kwargs):
@@ -24,7 +25,7 @@ class LoginPageView(generic.TemplateView):
                 context["error"] = "Invalid credentials"
             return self.render_to_response(context)
 
-class RegisterPageView(generic.TemplateView):
+class RegisterPageView(UserLoginCheckRequiredMixin, generic.TemplateView):
     template_name = "public-panel/register.html"
     
     def post(self, request, *args, **kwargs):
@@ -58,3 +59,28 @@ class HomePageView(generic.TemplateView):
 
 class AboutPageView(generic.TemplateView):
     template_name = "public-panel/about.html"
+
+class DashboardPageView(UserLoginRequiredMixin, generic.TemplateView):
+    template_name = "public-panel/dashboard/index.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Add user to context (already available as request.user)
+        context['user'] = self.request.user
+        
+        # TODO: Add cart items when Cart model is created
+        # context['cart_items'] = Cart.objects.filter(user=self.request.user)
+        # context['cart_total'] = sum(item.subtotal for item in context['cart_items'])
+        context['cart_items'] = []
+        context['cart_total'] = 0
+        
+        # TODO: Add orders when Order model is created
+        # context['orders'] = Order.objects.filter(user=self.request.user).order_by('-created_at')
+        context['orders'] = []
+        
+        # TODO: Add wishlist items when Wishlist model is created
+        # context['wishlist_items'] = Wishlist.objects.filter(user=self.request.user)
+        context['wishlist_items'] = []
+        
+        return context

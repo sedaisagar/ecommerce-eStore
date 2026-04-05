@@ -41,10 +41,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Custom Apps
     'users',
     'products',
     'miscellaneous',
+    # Third Party Apps
+    "crispy_forms",
+    "crispy_bootstrap5",
+    'tinymce',
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTH_USER_MODEL = 'users.User'
 

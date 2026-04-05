@@ -60,7 +60,7 @@
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
-            <a href="{% url 'admin-home-page' %}" class="app-brand-link">
+            <a href="{% url 'home-page' %}" class="app-brand-link" target="_blank">
               <span class="app-brand-logo demo">
                 <span class="text-primary">
                   <svg
@@ -183,12 +183,33 @@
               <span class="menu-header-text">Management</span>
             </li>
             <li class="menu-item">
-              <a
-                href=""
-                class="menu-link">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-cube"></i>
                 <div class="text-truncate" data-i18n="Products">Products</div>
               </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a
+                    href="{% url 'admin-product-cat-list' %}"
+                    class="menu-link">
+                    <div class="text-truncate" data-i18n="Categories">Cateogries</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a
+                    href="{% url 'admin-product-type-list' %}"
+                    class="menu-link">
+                    <div class="text-truncate" data-i18n="Types">Types</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a
+                    href="{% url 'admin-product-list' %}"
+                    class="menu-link">
+                    <div class="text-truncate" data-i18n="Products">Products</div>
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="menu-item">
               <a

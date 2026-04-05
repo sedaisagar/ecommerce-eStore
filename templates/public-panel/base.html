@@ -142,7 +142,11 @@
                                             <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
                                         </div>
                                     </li>
-                                   <li class="d-none d-lg-block"> <a href="{% url 'login-page' %}" class="btn header-btn">Sign in</a></li>
+                                    {% if request.user.is_authenticated %}
+                                    <li class="d-none d-lg-block"> <a href="{% url 'dashboard-page' %}" class="btn header-btn">My Account</a></li>
+                                    {% else %}
+                                    <li class="d-none d-lg-block"> <a href="{% url 'login-page' %}" class="btn header-btn">Sign in</a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                             <!-- Mobile Menu -->
