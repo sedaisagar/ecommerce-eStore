@@ -10,6 +10,8 @@ class AdminLoginRequiredMixin:
         if request.user.is_authenticated :
             if request.user.role == "admin":
                 no_auth = False
+            else:
+                no_auth = True
         else:
             rev_name = "admin-login-page"
 

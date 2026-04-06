@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 
+from products.models import Product, ProductCategory, ProductType
 from public_panel.permissions import UserLoginCheckRequiredMixin, UserLoginRequiredMixin
 from users.models import User
 
@@ -84,3 +85,34 @@ class DashboardPageView(UserLoginRequiredMixin, generic.TemplateView):
         context['wishlist_items'] = []
         
         return context
+    
+class CategoryPageView(generic.ListView):
+    template_name = "public-panel/category.html"
+    queryset = ProductCategory.objects.all()
+    context_object_name = "categories" # object_list by default, changed to categories for clarity
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['categories'] = ProductCategory.objects.all()
+    #     return context
+    
+class ProductListPageView(generic.ListView):
+    template_name = "public-panel/product-list.html"
+    queryset = Product.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context.update(
+            categories = ProductCategory.objects.all(),
+            types = ProductType.objects.all(),
+        )
+        return context
+class ProductDetailPageView(generic.DetailView):
+    template_name = "public-panel/product-detail.html"
+    queryset = Product.objects.all() # Change to Product.objects.all() when Product model is created
+    context_object_name = "product"
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['categories'] = ProductCategory.objects.all()
+    #     return context

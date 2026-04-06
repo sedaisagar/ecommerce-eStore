@@ -67,11 +67,9 @@
                                 </div>
                                 <div class="header-info-right">
                                    <ul>                                          
-                                       <li><a href="login.html">My Account </a></li>
-                                       <li><a href="product_list.html">Wish List  </a></li>
-                                       <li><a href="cart.html">Shopping</a></li>
-                                       <li><a href="cart.html">Cart</a></li>
-                                       <li><a href="checkout.html">Checkout</a></li>
+                                       <li><a href="">Wish List  </a></li>
+                                       <li><a href="{% url 'category-page' %}">Shopping</a></li>
+                                       <li><a href="">Cart</a></li>
                                    </ul>
                                 </div>
                             </div>
@@ -93,31 +91,26 @@
                                     <nav>                                                
                                         <ul id="navigation">                                                                                                                                     
                                             <li><a href="{% url 'home-page' %}">Home</a></li>
-                                            <li><a href="Catagori.html">Catagori</a></li>
+                                            <li><a href="{% url 'category-page' %}">Category</a></li>
                                             <li class="hot"><a href="#">Latest</a>
                                                 <ul class="submenu">
-                                                    <li><a href="product_list.html"> Product list</a></li>
-                                                    <li><a href="single-product.html"> Product Details</a></li>
+                                                    <li><a href="{% url 'product-page' %}"> Product list</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="blog.html">Blog</a>
+                                            <li><a href="">Blog</a>
                                                 <ul class="submenu">
-                                                    <li><a href="blog.html">Blog</a></li>
-                                                    <li><a href="single-blog.html">Blog Details</a></li>
+                                                    <li><a href="">Blog</a></li>
                                                 </ul>
                                             </li>
                                             <li><a href="#">Pages</a>
                                                 <ul class="submenu">
-                                                    <li><a href="login.html">Login</a></li>
-                                                    <li><a href="cart.html">Card</a></li>
-                                                    <li><a href="elements.html">Element</a></li>
                                                     <li><a href="{% url 'about-page' %}">About</a></li>
-                                                    <li><a href="confirmation.html">Confirmation</a></li>
-                                                    <li><a href="cart.html">Shopping Cart</a></li>
-                                                    <li><a href="checkout.html">Product Checkout</a></li>
+                                                    <li><a href="">Shopping Cart</a></li>
+                                                    <!-- <li><a href="confirmation.html">Confirmation</a></li> -->
+                                                    <!-- <li><a href="checkout.html">Product Checkout</a></li> -->
                                                 </ul>
                                             </li>
-                                            <li><a href="contact.html">Contact</a></li>
+                                            <li><a href="">Contact</a></li>
                                         </ul>
                                     </nav>
                                 </div>

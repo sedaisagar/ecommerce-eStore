@@ -11,10 +11,12 @@ class UserLoginRequiredMixin:
         if request.user.is_authenticated :
             if request.user.role == "user":
                 no_auth = False
+            else:
+                no_auth = True
+                rev_name = "admin-home-page"
        
         if no_auth:
             return redirect(rev_name)
-    
         return super().dispatch(request, *args, **kwargs)
     
 class UserLoginCheckRequiredMixin:
