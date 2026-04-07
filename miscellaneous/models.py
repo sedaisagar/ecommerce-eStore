@@ -7,6 +7,9 @@ class BlogCategory(CommonModel):
 
     class Meta:
         db_table = "blog_categories"
+    
+    def __str__(self):
+        return self.name
 
 class BlogTag(CommonModel):
     name = models.CharField(max_length=255, unique=True)
@@ -14,6 +17,8 @@ class BlogTag(CommonModel):
     class Meta:
         db_table = "blog_tags"
 
+    def __str__(self):
+        return self.name
 
 class Blog(CommonModel):
     category = models.ForeignKey(BlogCategory, on_delete=models.CASCADE, related_name='blogs')

@@ -1,9 +1,18 @@
 from django.urls import path
 
-from public_panel.views import CategoryPageView, HomePageView, AboutPageView, LoginPageView, ProductDetailPageView, ProductListPageView, RegisterPageView, DashboardPageView
+from public_panel.views import (
+    LoginPageView, LogoutView, RegisterPageView, 
+    DashboardPageView,
+    HomePageView, AboutPageView, 
+    CategoryPageView, ProductDetailPageView, ProductListPageView,
+    BlogDetailPageView, BlogListPageView, 
+)
+
 
 urlpatterns = [
     path("login/",  LoginPageView.as_view(), name="login-page"),
+    path('logout/', LogoutView.as_view(), name='logout-page'),
+    # 
     path("register/",  RegisterPageView.as_view(), name="register-page"),
     path("dashboard/",  DashboardPageView.as_view(), name="dashboard-page"),
     # 
@@ -12,6 +21,10 @@ urlpatterns = [
 
     # Category and Product Pages
     path("categories/",  CategoryPageView.as_view(), name="category-page"),
+    
     path("products/",  ProductListPageView.as_view(), name="product-page"),
     path("products/<str:pk>",  ProductDetailPageView.as_view(), name="product-detail-page"),
+    # Blogs
+    path("blogs/",  BlogListPageView.as_view(), name="blog-page"),
+    path("blogs/<str:pk>",  BlogDetailPageView.as_view(), name="blog-detail-page"),
 ]

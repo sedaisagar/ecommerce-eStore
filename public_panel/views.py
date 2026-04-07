@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 
+from miscellaneous.models import Blog, BlogCategory, BlogTag
 from products.models import Product, ProductCategory, ProductType
 from public_panel.permissions import UserLoginCheckRequiredMixin, UserLoginRequiredMixin
 from users.models import User
@@ -25,6 +26,15 @@ class LoginPageView(UserLoginCheckRequiredMixin, generic.TemplateView):
             else:
                 context["error"] = "Invalid credentials"
             return self.render_to_response(context)
+
+
+class LogoutView(generic.TemplateView):
+    template_name = "public-panel/logout.html"
+
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("login-page")
+
 
 class RegisterPageView(UserLoginCheckRequiredMixin, generic.TemplateView):
     template_name = "public-panel/register.html"
@@ -107,6 +117,7 @@ class ProductListPageView(generic.ListView):
             types = ProductType.objects.all(),
         )
         return context
+    
 class ProductDetailPageView(generic.DetailView):
     template_name = "public-panel/product-detail.html"
     queryset = Product.objects.all() # Change to Product.objects.all() when Product model is created
@@ -116,3 +127,34 @@ class ProductDetailPageView(generic.DetailView):
     #     context = super().get_context_data(**kwargs)
     #     context['categories'] = ProductCategory.objects.all()
     #     return context
+
+
+class BlogListPageView(generic.ListView):
+    template_name = "public-panel/blog.html"
+    queryset = Blog.objects.all()
+    # object_list
+    context_object_name = "blogs"
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context.update(
+            categories = BlogCategory.objects.all(),
+            tags = BlogTag.objects.all(),
+            recent_blogs = Blog.objects.order_by('-created_at')[:4],
+        )
+        return context
+    
+class BlogDetailPageView(generic.DetailView):
+    template_name = "public-panel/blog-detail.html"
+    queryset = Blog.objects.all()
+    # object
+    context_object_name = "blog"
+
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context.update(
+            categories = BlogCategory.objects.all(),
+            tags = BlogTag.objects.all(),
+            recent_blogs = Blog.objects.order_by('-created_at')[:4],
+        )
+        return context

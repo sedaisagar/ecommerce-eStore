@@ -212,12 +212,33 @@
               </ul>
             </li>
             <li class="menu-item">
-              <a
-                href=""
-                class="menu-link">
-                <i class="menu-icon tf-icons bx bx-chat"></i>
-                <div class="text-truncate" data-i18n="Blogs">Blogs</div>
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-cube"></i>
+                <div class="text-truncate" data-i18n="Products">Blogs</div>
               </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a
+                    href="{% url 'admin-blog-cat-list' %}"
+                    class="menu-link">
+                    <div class="text-truncate" data-i18n="Categories">Cateogries</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a
+                    href="{% url 'admin-blog-tag-list' %}"
+                    class="menu-link">
+                    <div class="text-truncate" data-i18n="Tags">Tags</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a
+                    href="{% url 'admin-blog-list' %}"
+                    class="menu-link">
+                    <div class="text-truncate" data-i18n="Blogs">Blogs</div>
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </aside>
