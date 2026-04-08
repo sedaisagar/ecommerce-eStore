@@ -81,6 +81,7 @@
                                                 <li class="discount">$60.00</li>
                                             </ul>
                                         </div>
+                                        <button {% if request.user.is_authenticated %} onclick="addToWishList('{{j.id}}')" {% else %} disabled {% endif %} class="btn_3" style="background-color: #ff6b6b; font-size: 12px; padding: 8px 15px; display: inline-block; margin-top: 10px; border: none; cursor: pointer;"><i class="ti-heart"></i> Wishlist</button>
                                     </div>
                                 </div>
                             </div>
@@ -185,4 +186,24 @@
         <!-- Gallery End-->
 
     </main>
+
+<script>
+    const addToWishList = (productId) => {
+        console.log(`Adding product ${productId} to wishlist`);
+        const wishListUrl = `/api/add-to-wishlist/${productId}/add`;
+
+        fetch(wishListUrl).then(response => response.json()).then(data => {
+            Swal.fire({
+                icon: "success",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }).catch(error => {
+            console.error('Error adding to wishlist:', error);
+            alert('An error occurred while adding to wishlist. Please try again.');
+        });
+    };
+</script>
+
 {% endblock %}

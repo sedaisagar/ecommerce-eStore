@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from public_panel.views import (
     LoginPageView, LogoutView, RegisterPageView, 
@@ -6,6 +6,8 @@ from public_panel.views import (
     HomePageView, AboutPageView, 
     CategoryPageView, ProductDetailPageView, ProductListPageView,
     BlogDetailPageView, BlogListPageView, 
+    # APIs
+    add_to_wishlist, 
 )
 
 
@@ -27,4 +29,12 @@ urlpatterns = [
     # Blogs
     path("blogs/",  BlogListPageView.as_view(), name="blog-page"),
     path("blogs/<str:pk>",  BlogDetailPageView.as_view(), name="blog-detail-page"),
+
+    # 
+
+    path("api/", include(
+        [
+            path("add-to-wishlist/<str:product_id>/<str:action>", add_to_wishlist, name="add-to-wishlist"),
+        ]
+    ))
 ]

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'users',
     'products',
     'miscellaneous',
+    'user_items',
     # Third Party Apps
     "crispy_forms",
     "crispy_bootstrap5",
@@ -56,6 +57,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = "login-page"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

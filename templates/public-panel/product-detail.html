@@ -42,13 +42,17 @@
                     <p>Quantity</p>
                     <div class="product_count d-inline-block">
                         <span class="product_count_item inumber-decrement"> <i class="ti-minus"></i></span>
-                        <input class="product_count_item input-number" type="text" value="1" min="0" max="10">
+                        <input class="product_count_item input-number" type="text" value="1" min="0" max="10" id="itemQty">
                         <span class="product_count_item number-increment"> <i class="ti-plus"></i></span>
                     </div>
                     <p>$ {{product.price}}</p>
                 </div>
               <div class="add_to_cart">
-                  <a href="#" class="btn_3">add to cart</a>
+                    <button {% if request.user.is_authenticated %} onclick="addToCart('{{product.id}}')" {% else %} disabled {% endif %} class="btn_3">add to cart</button>
+                    <button {% if request.user.is_authenticated %} onclick="addToWishList('{{product.id}}')"{% else %} disabled {% endif %}  class="btn_3">
+                        <i class="ti-heart"></i> 
+                        Add to Wishlist
+                    </button>
               </div>
             </div>
           </div>
@@ -75,5 +79,32 @@
       </div>
   </section>
   <!-- subscribe part end -->
+  <script>
+    
+    const addToCart = (productId) => {
+        const quantity = document.getElementById('itemQty').value;
+        console.log(`Adding product ${productId} to cart with quantity ${quantity}`);
+    };
+
+    const addToWishList = (productId) => {
+        console.log(`Adding product ${productId} to wishlist`);
+        const wishListUrl = `/api/add-to-wishlist/${productId}/add`;
+
+        fetch(wishListUrl).then(response => response.json()).then(data => {
+            Swal.fire({
+                // position: "top-end",
+                icon: "success",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }).catch(error => {
+            console.error('Error adding to wishlist:', error);
+            alert('An error occurred while adding to wishlist. Please try again.');
+        });
+    };
+
+  </script>
+ 
 
 {% endblock %}

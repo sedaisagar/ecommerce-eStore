@@ -144,9 +144,9 @@
                             <h2 class="section-title">My Wishlist</h2>
                             
                             {% if wishlist_items %}
-                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;" >
                                     {% for item in wishlist_items %}
-                                        <div class="wishlist-item" style="flex-direction: column; align-items: stretch;">
+                                        <div class="wishlist-item" style="flex-direction: column; align-items: stretch;" id="wlitem-{{item.id}}">
                                             <div class="item-image" style="width: 100%; height: 200px; margin-right: 0; margin-bottom: 15px;">
                                                 {% if item.product.image %}
                                                     <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
@@ -162,7 +162,7 @@
                                             </div>
                                             <div class="item-actions" style="width: 100%; gap: 5px;">
                                                 <button class="btn-action btn-edit" style="flex: 1;" onclick="alert('Add to cart feature coming soon!')">Add to Cart</button>
-                                                <button class="btn-action btn-remove" style="flex: 1;" onclick="alert('Remove from wishlist feature coming soon!')">Remove</button>
+                                                <button class="btn-action btn-remove" style="flex: 1;" onclick="removeFromWishList('{{item.product.id}}', 'wlitem-{{item.id}}')">Remove</button>
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -183,6 +183,24 @@
 </main>
 
 <script>
+    const removeFromWishList = (productId, targetId) => {
+        console.log(`Removing product ${productId} to wishlist`);
+        const wishListUrl = `/api/add-to-wishlist/${productId}/remove`;
+
+        fetch(wishListUrl).then(response => response.json()).then(data => {
+            Swal.fire({
+                // position: "top-end",
+                icon: "success",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+            document.getElementById(targetId).remove();
+        }).catch(error => {
+            console.error('Error removing from wishlist:', error);
+            alert('An error occurred while removing from wishlist. Please try again.');
+        });
+    };
     document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
         link.addEventListener('click', function(e) {
             // Don't prevent default for external links

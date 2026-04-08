@@ -5,7 +5,8 @@ from django.contrib.auth.hashers import make_password
 
 from miscellaneous.models import Blog, BlogCategory, BlogTag
 from products.models import Product, ProductCategory, ProductType
-from public_panel.permissions import UserLoginCheckRequiredMixin, UserLoginRequiredMixin
+from public_panel.permissions import UserLoginCheckRequiredMixin, UserLoginRequiredMixin, user_login_required
+from user_items.models import Wishlist
 from users.models import User
 
 class LoginPageView(UserLoginCheckRequiredMixin, generic.TemplateView):
@@ -92,7 +93,7 @@ class DashboardPageView(UserLoginRequiredMixin, generic.TemplateView):
         
         # TODO: Add wishlist items when Wishlist model is created
         # context['wishlist_items'] = Wishlist.objects.filter(user=self.request.user)
-        context['wishlist_items'] = []
+        context['wishlist_items'] =  Wishlist.objects.filter(user=self.request.user)
         
         return context
     
@@ -158,3 +159,51 @@ class BlogDetailPageView(generic.DetailView):
             recent_blogs = Blog.objects.order_by('-created_at')[:4],
         )
         return context
+    
+
+from django.http import JsonResponse
+
+@user_login_required
+def add_to_wishlist(request, product_id, action):
+    if action not in ["add", "remove"]:
+        response = JsonResponse({"message": "Invalid action. Use 'add' or 'remove'."})
+        response.status_code = 400
+        return response
+    
+    products = Product.objects.filter(pk=product_id) 
+
+    if products.exists():
+        product = products.first()
+        
+        if action == "remove":
+            wls = Wishlist.objects.filter(user=request.user, product=product)
+            if wls.exists():
+                wl = wls.first()
+                wl.delete()
+                message = {"message": f"Product #{product_id} removed from wishlist successfully."}
+                status = 200
+            else:
+                message = {"message": f"Product #{product_id} is not in your wishlist."}
+                status = 400
+        else:
+            _, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+            if created:
+                message = {"message": f"Product #{product_id} added to wishlist successfully."}
+            else:
+                message = {"message": f"Product #{product_id} is already in your wishlist."}
+            
+            status = 200
+    else:
+        message= {"message": f"Product not added to wishlist, since it does not exist!"}
+        status = 400
+
+    response = JsonResponse(message)
+    response.status_code = status
+    return response
+
+
+# 1xx -> Informational
+# 2xx -> Success
+# 3xx -> Redirection
+# 4xx -> Client Error
+# 5xx -> Server Error
