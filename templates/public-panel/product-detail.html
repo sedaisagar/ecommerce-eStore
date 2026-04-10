@@ -83,7 +83,32 @@
     
     const addToCart = (productId) => {
         const quantity = document.getElementById('itemQty').value;
+
         console.log(`Adding product ${productId} to cart with quantity ${quantity}`);
+        
+        const cartUrl = `/api/add-to-cart/`;
+
+        const fd = new FormData();
+        fd.append('product', productId);
+        fd.append('quantity', quantity);
+        fd.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        
+        fetch(cartUrl, {
+            method: 'POST',
+            body: fd
+        }).then(response => response.json()).then(data => {
+            Swal.fire({
+                // position: "top-end",
+                icon: "success",
+                title: data.message,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }).catch(error => {
+            console.error('Error adding to cart:', error);
+            alert('An error occurred while adding to cart. Please try again.');
+        });
+
     };
 
     const addToWishList = (productId) => {

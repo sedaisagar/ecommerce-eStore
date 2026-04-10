@@ -6,8 +6,9 @@ from django.contrib.auth.hashers import make_password
 from miscellaneous.models import Blog, BlogCategory, BlogTag
 from products.models import Product, ProductCategory, ProductType
 from public_panel.permissions import UserLoginCheckRequiredMixin, UserLoginRequiredMixin, user_login_required
-from user_items.models import Wishlist
+from user_items.models import CartItem, Wishlist
 from users.models import User
+from django.db import models
 
 class LoginPageView(UserLoginCheckRequiredMixin, generic.TemplateView):
     template_name = "public-panel/login.html"
@@ -72,6 +73,15 @@ class HomePageView(generic.TemplateView):
 class AboutPageView(generic.TemplateView):
     template_name = "public-panel/about.html"
 
+
+class CartPageView(UserLoginRequiredMixin, generic.ListView):
+    template_name = "public-panel/cart.html"
+    
+    def get_queryset(self):
+        return CartItem.objects.filter(user=self.request.user).annotate(
+            subtotal=models.F('quantity') * models.F('product__price')
+        )
+
 class DashboardPageView(UserLoginRequiredMixin, generic.TemplateView):
     template_name = "public-panel/dashboard/index.html"
     
@@ -84,8 +94,12 @@ class DashboardPageView(UserLoginRequiredMixin, generic.TemplateView):
         # TODO: Add cart items when Cart model is created
         # context['cart_items'] = Cart.objects.filter(user=self.request.user)
         # context['cart_total'] = sum(item.subtotal for item in context['cart_items'])
-        context['cart_items'] = []
-        context['cart_total'] = 0
+        context['cart_items'] = CartItem.objects.filter(user=self.request.user).annotate(
+            subtotal=models.F('quantity') * models.F('product__price')
+        )
+        context['cart_total'] = CartItem.objects.filter(user=self.request.user).aggregate(
+            total=models.Sum(models.F('quantity') * models.F('product__price'))
+        )['total'] or 0
         
         # TODO: Add orders when Order model is created
         # context['orders'] = Order.objects.filter(user=self.request.user).order_by('-created_at')
@@ -200,6 +214,49 @@ def add_to_wishlist(request, product_id, action):
     response = JsonResponse(message)
     response.status_code = status
     return response
+
+@user_login_required
+def add_to_cart(request):
+    if request.method != "POST":
+        response = JsonResponse({"message": "Invalid request method. Use POST."})
+        response.status_code = 400
+        return response
+
+    data = request.POST
+
+    user = request.user
+    product = data.get("product")
+    quantity = data.get("quantity", "0") # Remove Action if qty = 0 else update / add cart qty
+    quantity = int(quantity)
+
+    if quantity == 0:
+        deleted_items,_ = CartItem.objects.filter(
+        user=user,
+        product_id=product).delete()
+
+        if deleted_items > 0:
+            message = {"message": f"Product #{product} removed from cart successfully."}
+            status = 200
+        else:
+            message = {"message": f"Product #{product} is not in your cart."}
+            status = 400
+    else:
+        _, flag =  CartItem.objects.update_or_create(
+            user=user,
+            product_id=product,
+            defaults={"quantity": quantity}
+        )
+        if flag:
+            message = {"message": f"Product #{product} added to cart successfully."}
+        else:
+            message = {"message": f"Product #{product} quantity updated in cart successfully."}
+
+        status = 200
+    
+    response = JsonResponse(message)
+    response.status_code = status
+    return response
+
 
 
 # 1xx -> Informational

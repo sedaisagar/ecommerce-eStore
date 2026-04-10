@@ -1,11 +1,11 @@
 from django.urls import include, path
 
 from public_panel.views import (
-    LoginPageView, LogoutView, RegisterPageView, 
+    CartPageView, LoginPageView, LogoutView, RegisterPageView, 
     DashboardPageView,
     HomePageView, AboutPageView, 
     CategoryPageView, ProductDetailPageView, ProductListPageView,
-    BlogDetailPageView, BlogListPageView, 
+    BlogDetailPageView, BlogListPageView, add_to_cart, 
     # APIs
     add_to_wishlist, 
 )
@@ -20,6 +20,7 @@ urlpatterns = [
     # 
     path("",  HomePageView.as_view(), name="home-page"),
     path("about/",  AboutPageView.as_view(), name="about-page"),
+    path("cart/",  CartPageView.as_view(), name="cart-page"),
 
     # Category and Product Pages
     path("categories/",  CategoryPageView.as_view(), name="category-page"),
@@ -35,6 +36,7 @@ urlpatterns = [
     path("api/", include(
         [
             path("add-to-wishlist/<str:product_id>/<str:action>", add_to_wishlist, name="add-to-wishlist"),
+            path("add-to-cart/", add_to_cart, name="add-to-cart"),
         ]
     ))
 ]
